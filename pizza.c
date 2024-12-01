@@ -51,10 +51,10 @@ void adicionarPizza(){
     // Dados da pizza
     piz.id = novoID;
 
-    getchar(); // Limpa o buffer do teclado
+    getchar(); 
     printf("Digite o nome da pizza: ");
     fgets(piz.nome, sizeof(piz.nome), stdin);
-    piz.nome[strcspn(piz.nome, "\n")] = '\0'; // Remove o '\n'
+    piz.nome[strcspn(piz.nome, "\n")] = '\0'; 
 
     printf("Digite o tamanho da pizza (P, M, G): ");
     scanf(" %c", &piz.tamanho);
@@ -74,7 +74,7 @@ void adicionarPizza(){
     }
 
     piz.qtdIngredientes = qtdIngredientes; // Define a quantidade de ingredientes
-    getchar(); // Limpa o buffer
+    getchar(); 
 
     for (i = 0; i < qtdIngredientes; i++) {
         printf("Digite o nome do ingrediente %d: ", i + 1);
@@ -106,7 +106,7 @@ void adicionarPizza(){
     printf("\nPizza cadastrada com sucesso!\n");
 
     printf("Pressione Enter para continuar...\n");
-    getchar(); // Aguarda o Enter
+    getchar(); 
     getchar();
 }
 
@@ -138,7 +138,7 @@ void visualizarPizza(){
     fclose(arquivoPizza);
 
     printf("Pressione Enter para continuar...\n");
-    getchar(); // Aguarda o Enter
+    getchar() // Aguarda o Enter
     getchar();
 }
 
@@ -167,7 +167,7 @@ void editarPizza(){
             // Edita o nome da pizza
             printf("Digite o novo nome da pizza: ");
             fgets(piz.nome, sizeof(piz.nome), stdin);
-            piz.nome[strcspn(piz.nome, "\n")] = '\0'; // Remove o '\n'
+            piz.nome[strcspn(piz.nome, "\n")] = '\0'; 
 
             // Edita o tamanho da pizza
             printf("Digite o novo tamanho da pizza (P, M, G): ");
@@ -193,8 +193,8 @@ void editarPizza(){
     fclose(arquivoPizza);
 
     printf("Pressione Enter para continuar...\n");
-    getchar(); // Aguarda o Enter
-    getchar(); // Evita que o Enter residual da entrada anterior passe direto
+    getchar();
+    getchar(); 
 }
 
 void removerPizza(){
@@ -209,10 +209,10 @@ void removerPizza(){
         return;
     }
 
-    getchar(); // Limpa o buffer do teclado
+    getchar(); 
     printf("Digite o nome da pizza a ser deletada: ");
     fgets(nomePizza, sizeof(nomePizza), stdin);
-    nomePizza[strcspn(nomePizza, "\n")] = '\0'; // Remove o '\n'
+    nomePizza[strcspn(nomePizza, "\n")] = '\0'; 
 
     while (fread(&piz, sizeof(pizza), 1, arquivoPizza) == 1) {
         if (strcmp(piz.nome, nomePizza) != 0) {
