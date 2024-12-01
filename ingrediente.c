@@ -7,7 +7,7 @@ void adicionarIngrediente() {
     ingrediente ing;
     int ultimoID = 0;
 
-    // Abre o arquivo de ingredientes para escrita
+    
     FILE *arquivo = fopen("ingredientes.txt", "ab");
     if (arquivo == NULL) {
         printf("Erro: nao foi possivel abrir o arquivo de ingredientes.\n");
@@ -44,15 +44,15 @@ void adicionarIngrediente() {
 
     // Preenche o registro do ingrediente
     ing.id = novoID;
-    getchar(); // Limpa o buffer do teclado
+    getchar(); 
     printf("Digite o nome: ");
     fgets(ing.nome, sizeof(ing.nome), stdin);
-    ing.nome[strcspn(ing.nome, "\n")] = '\0'; // Remove o '\n' do final da string
+    ing.nome[strcspn(ing.nome, "\n")] = '\0'; 
 
     printf("Digite o preco: ");
     scanf("%f", &ing.preco);
 
-    // Salva o ingrediente no arquivo de ingredientes
+    
     fwrite(&ing, sizeof(ingrediente), 1, arquivo);
     fclose(arquivo);
 
@@ -60,7 +60,7 @@ void adicionarIngrediente() {
 
     // Pausa para permitir a visualização
     printf("Pressione Enter para continuar...\n");
-    getchar(); // Aguarda o Enter
+    getchar(); 
     getchar();
 }
 
@@ -91,9 +91,9 @@ void editarIngrediente(){
     int encontrado = 0;
 
     printf("Digite o nome do ingrediente que deseja editar: ");
-    getchar(); // Limpa o buffer
+    getchar(); 
     fgets(nomeBusca, sizeof(nomeBusca), stdin);
-    nomeBusca[strcspn(nomeBusca, "\n")] = '\0'; // Remove o '\n' do final da string
+    nomeBusca[strcspn(nomeBusca, "\n")] = '\0';
 
     FILE *arquivo = fopen("ingredientes.txt", "rb");
     FILE *temp = fopen("temp.txt", "wb");
@@ -134,8 +134,8 @@ void editarIngrediente(){
     }
 
     printf("Pressione Enter para continuar...\n");
-    getchar(); // Aguarda o Enter
-    getchar(); // Evita que o Enter residual da entrada anterior passe direto
+    getchar(); 
+    getchar(); 
 }
 
 
@@ -145,9 +145,9 @@ void removerIngrediente(){
     int encontrado = 0;
 
     printf("Digite o nome do ingrediente que deseja deletar: ");
-    getchar(); // Limpa o buffer
+    getchar(); //
     fgets(nomeBusca, sizeof(nomeBusca), stdin);
-    nomeBusca[strcspn(nomeBusca, "\n")] = '\0'; // Remove o '\n' do final da string
+    nomeBusca[strcspn(nomeBusca, "\n")] = '\0'; 
 
     FILE *arquivo = fopen("ingredientes.txt", "rb");
     FILE *temp = fopen("temp.txt", "wb");
@@ -180,7 +180,7 @@ void removerIngrediente(){
     }
 
     printf("Pressione Enter para continuar...\n");
-    getchar(); // Aguarda o Enter
-    getchar(); // Evita que o Enter residual da entrada anterior passe direto
+    getchar(); 
+    getchar(); 
 
 }
