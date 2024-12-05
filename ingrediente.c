@@ -23,52 +23,50 @@ void adicionarIngrediente() {
             fclose(arquivo);
             exit(1);
         }
-        fprintf(idFile, "0"); // Inicializa o ID com 0
+        fprintf(idFile, "0"); 
         fflush(idFile);
         rewind(idFile);
     }
 
-    // Lê o último ID
-    if (fscanf(idFile, "%d", &ultimoID) != 1) {
-        ultimoID = 0; // Define como 0 se a leitura falhar
+    if (fscanf(idFile, "%d", &ultimoID) != 1) { // Lê o último ID
+        ultimoID = 0; 
     }
 
-    // Incrementa o ID
-    int novoID = ultimoID + 1;
+    
+    int novoID = ultimoID + 1; // Incrementa o ID
 
-    // Atualiza o ID no arquivo
     rewind(idFile); // Move o cursor para o início do arquivo
     fprintf(idFile, "%d", novoID); // Grava o novo ID
     fflush(idFile);
     fclose(idFile);
 
-    // Preenche o registro do ingrediente
+    //Pede os dados
     ing.id = novoID;
-    getchar(); // Limpa o buffer do teclado
+    getchar(); 
     printf("Digite o nome: ");
     fgets(ing.nome, sizeof(ing.nome), stdin);
-    ing.nome[strcspn(ing.nome, "\n")] = '\0'; // Remove o '\n' do final da string
+    ing.nome[strcspn(ing.nome, "\n")] = '\0'; 
 
     printf("Digite o preco: ");
     scanf("%f", &ing.preco);
 
-    // Salva o ingrediente no arquivo de ingredientes
-    fwrite(&ing, sizeof(ingrediente), 1, arquivo);
-    fclose(arquivo);
+    
+    fwrite(&ing, sizeof(ingrediente), 1, arquivo); // Salva o ingrediente no arquivo de ingredientes
+    fclose(arquivo); //Fecha o arquivo
 
     printf("Registro adicionado com ID: %d\n\n", ing.id);
 
-    // Pausa para permitir a visualização
     printf("Pressione Enter para continuar...\n");
-    getchar(); // Aguarda o Enter
+    getchar(); 
     getchar();
 }
 
 
 void visualizarIngrediente() {
-    FILE *arquivo = fopen("ingredientes.txt", "rb"); // Abre em modo leitura binária
+    FILE *arquivo = fopen("ingredientes.txt", "rb"); // Abre em modo leitura 
     ingrediente ing;
 
+    //Lendo o arquivo
     if (arquivo) {
         printf("\nIngredientes cadastrados:\n\n");
         while (fread(&ing, sizeof(ingrediente), 1, arquivo) == 1) {
@@ -80,8 +78,8 @@ void visualizarIngrediente() {
     }
 
     printf("Pressione Enter para continuar...\n");
-    getchar(); // Aguarda o Enter
-    getchar(); // Evita que o Enter residual da entrada anterior passe direto
+    getchar(); 
+    getchar(); 
 }
 
 
@@ -89,11 +87,11 @@ void editarIngrediente(){
     char nomeBusca[50];
     ingrediente ing;
     int encontrado = 0;
-    int idPizza;
+    int idIngrediente;
 
-    getchar(); // Aguarda o Enter
-    printf("Digite o ID do ingrediente que deseja alterar: ");
-    scanf("%d", &idPizza);
+    getchar(); 
+    printf("Digite o ID do ingrediente que deseja alterar: "); //Pergunta o id para busca da pizza no arquivo
+    scanf("%d", &idIngrediente);
 
     FILE *arquivo = fopen("ingredientes.txt", "rb");
     FILE *temp = fopen("temp.txt", "wb");
@@ -105,8 +103,9 @@ void editarIngrediente(){
         return;
     }
 
+    //Pedindo os novos dados
     while (fread(&ing, sizeof(ingrediente), 1, arquivo) == 1) {
-        if (ing.id == idPizza) {
+        if (ing.id == idIngrediente) {
             encontrado = 1;
              
             printf("Ingrediente encontrado:\n");
@@ -120,24 +119,25 @@ void editarIngrediente(){
             printf("Digite o novo preco: ");
             scanf("%f", &ing.preco);
         }
-        fwrite(&ing, sizeof(ingrediente), 1, temp);
+        fwrite(&ing, sizeof(ingrediente), 1, temp); // Copia a pizza para o arquivo temporário
     }
 
     fclose(arquivo);
     fclose(temp);
 
     if (encontrado) {
+        // Substitui o arquivo original pelo arquivo temporário
         remove("ingredientes.txt");
         rename("temp.txt", "ingredientes.txt");
         printf("Ingrediente atualizado com sucesso.\n");
     } else {
         remove("temp.txt");
-        printf("Ingrediente com nome '%s' nao encontrado.\n", nomeBusca);
+        printf("Ingrediente com ID'%d' nao encontrado.\n", idIngrediente);
     }
 
     printf("Pressione Enter para continuar...\n");
-    getchar(); // Aguarda o Enter
-    getchar(); // Evita que o Enter residual da entrada anterior passe direto
+    getchar(); 
+    getchar(); 
 }
 
 
@@ -145,11 +145,12 @@ void removerIngrediente(){
     char nomeBusca[50];
     ingrediente ing;
     int encontrado = 0;
-    int idPizza;
+    int idIngrediente;
 
-    printf("Digite o ID do ingrediente que deseja deletar: ");
-    scanf("%d", &idPizza);
+    printf("Digite o ID do ingrediente que deseja deletar: "); //Pergunta o id para busca da pizza no arquivo
+    scanf("%d", &idIngrediente);
 
+    //Abre os arquivos
     FILE *arquivo = fopen("ingredientes.txt", "rb");
     FILE *temp = fopen("temp.txt", "wb");
 
@@ -161,23 +162,24 @@ void removerIngrediente(){
     }
 
     while (fread(&ing, sizeof(ingrediente), 1, arquivo) == 1) {
-        if (ing.id == idPizza) {
+        if (ing.id == idIngrediente) {
             encontrado = 1;
             printf("Ingrediente '%s' deletado.\n", ing.nome);
             continue; // Ignora o ingrediente para não copiá-lo para o arquivo temporário
         }
-        fwrite(&ing, sizeof(ingrediente), 1, temp);
+        fwrite(&ing, sizeof(ingrediente), 1, temp); // Copia a pizza para o arquivo temporário
     }
 
     fclose(arquivo);
     fclose(temp);
 
     if (encontrado) {
+        // Substitui o arquivo original pelo arquivo temporário
         remove("ingredientes.txt");
         rename("temp.txt", "ingredientes.txt");
     } else {
         remove("temp.txt");
-        printf("Ingrediente com nome '%s' nao encontrado.\n", nomeBusca);
+        printf("Ingrediente com nome '%d' nao encontrado.\n", idIngrediente);
     }
 
     printf("Pressione Enter para continuar...\n");

@@ -9,13 +9,13 @@ void adicionarPizza() {
     int ultimoID;
     int qtdIngredientes;
 
-    FILE *arquivoPizza = fopen("pizzas.txt", "ab");
+    FILE *arquivoPizza = fopen("pizzas.txt", "ab"); //Abre o arquivo pizzas.txt, caso não tenha, crie um.
     if (arquivoPizza == NULL) {
         printf("Erro ao abrir o arquivo pizzas.txt.\n");
         return;
     }
 
-    FILE *idFile = fopen("pizzas_id.txt", "r+");
+    FILE *idFile = fopen("pizzas_id.txt", "r+"); //Abre o arquivo pizzas_id.txt, caso não tenha, ela cria um, preenche o primeiro elemento com zero
     if (idFile == NULL) {
         idFile = fopen("pizzas_id.txt", "w+");
         if (idFile == NULL) {
@@ -28,19 +28,21 @@ void adicionarPizza() {
         rewind(idFile);
     }
 
-    if (fscanf(idFile, "%d", &ultimoID) != 1) {
+    if (fscanf(idFile, "%d", &ultimoID) != 1) { //Sobrescreve o arquivo seja incialzado com zero
         ultimoID = 0;
     }
 
-    int novoID = ultimoID + 1;
-    rewind(idFile);
-    fprintf(idFile, "%d", novoID);
-    fflush(idFile);
-    fclose(idFile);
+    int novoID = ultimoID + 1; //Incrementa o ID
+    
+    rewind(idFile); // Move o cursor para o início do arquivo
+    fprintf(idFile, "%d", novoID); // Grava o novo ID
+    fflush(idFile); 
+    fclose(idFile); //Fecha o arquivo
 
-    piz.id = novoID;
+    piz.id = novoID; //Atribui o ID
 
-    getchar(); // Limpa o buffer
+    //Pede os dados
+    getchar(); 
     printf("Digite o nome da pizza: ");
     fgets(piz.nome, sizeof(piz.nome), stdin);
     piz.nome[strcspn(piz.nome, "\n")] = '\0';
@@ -57,7 +59,7 @@ void adicionarPizza() {
     printf("Digite o preco base da pizza: ");
     scanf("%f", &piz.preco);
 
-    printf("Quantos ingredientes padrao a pizza tera? (Máx: 10): ");
+    printf("Quantos ingredientes padrao a pizza tera? (Max: 10): ");
     scanf("%d", &qtdIngredientes);
 
     if (qtdIngredientes > 10) {
@@ -77,8 +79,8 @@ void adicionarPizza() {
         strcpy(piz.ingredientes[i].nome, ""); // Zera os ingredientes não usados
     }
 
-    fwrite(&piz, sizeof(pizza), 1, arquivoPizza);
-    fclose(arquivoPizza);
+    fwrite(&piz, sizeof(pizza), 1, arquivoPizza); //Grava os dados no arquivo
+    fclose(arquivoPizza); //Fecha o arquivo
 
     printf("\nPizza cadastrada com sucesso!\n");
     getchar();
@@ -87,13 +89,14 @@ void adicionarPizza() {
 
 void visualizarPizza() {
     pizza piz;
-    FILE *arquivoPizza = fopen("pizzas.txt", "rb");
+    FILE *arquivoPizza = fopen("pizzas.txt", "rb"); //Abre os arquivos em modo leitura 
 
-    if (arquivoPizza == NULL) {
+    if (arquivoPizza == NULL) { // Caso não encontre pizzas cadastradas, exibe a mensagem e sai
         printf("Nenhuma pizza cadastrada.\n");
         return;
     }
 
+    //Lendo o arquivo
     while (fread(&piz, sizeof(pizza), 1, arquivoPizza) == 1) {
         printf("ID: %d\n", piz.id);
         printf("Nome: %s\n", piz.nome);
@@ -109,7 +112,7 @@ void visualizarPizza() {
         printf("\n");
     }
 
-    fclose(arquivoPizza);
+    fclose(arquivoPizza); //Fecha os arquivos
     printf("Pressione Enter para continuar...\n");
     getchar();
     getchar();
@@ -127,9 +130,11 @@ void editarPizza() {
         return;
     }
 
-    printf("Digite o ID da pizza a ser editada: ");
+    printf("Digite o ID da pizza a ser editada: "); //Pergunta o id para busca da pizza no arquivo
     scanf("%d", &idPizza);
 
+
+    //Pedindo os novos dados
     while (fread(&piz, sizeof(pizza), 1, arquivoPizza) == 1) {
         if (piz.id == idPizza) {
             found = 1;
@@ -156,7 +161,7 @@ void editarPizza() {
                 return;
             }
 
-            getchar(); // Limpa o buffer
+            getchar(); 
             for (int i = 0; i < qtdIngredientes; i++) {
                 printf("Digite o nome do ingrediente %d: ", i + 1);
                 fgets(piz.ingredientes[i].nome, sizeof(piz.ingredientes[i].nome), stdin);
@@ -168,8 +173,8 @@ void editarPizza() {
                 strcpy(piz.ingredientes[i].nome, "");
             }
 
-            fseek(arquivoPizza, -sizeof(pizza), SEEK_CUR);
-            fwrite(&piz, sizeof(pizza), 1, arquivoPizza);
+            fseek(arquivoPizza, -sizeof(pizza), SEEK_CUR); //reposiciona o ponteiro de leitura e escrita
+            fwrite(&piz, sizeof(pizza), 1, arquivoPizza); //Substituindo os atributos
 
             printf("\nPizza com ID %d editada com sucesso!\n", idPizza);
             break;
@@ -177,22 +182,22 @@ void editarPizza() {
     }
 
     if (!found) {
-        printf("Pizza com ID %d não encontrada.\n", idPizza);
+        printf("Pizza com ID %d nao encontrada.\n", idPizza);
     }
 
-    fclose(arquivoPizza);
+    fclose(arquivoPizza); //Fecha o arquivo
+    
     printf("Pressione Enter para continuar...\n");
-    getchar();
+    getchar(); 
+    getchar(); 
 }
-
-
 
 void removerPizza(){
     pizza piz;
     int idPizza;
     int found = 0;
 
-
+    //Abertura dos arquivos.
     FILE *arquivoPizza = fopen("pizzas.txt", "rb");
     FILE *arquivoTemp = fopen("pizzas_temp.txt", "wb");
 
@@ -201,7 +206,7 @@ void removerPizza(){
         return;
     }
 
-    printf("Digite o ID da pizza a ser excluida: ");
+    printf("Digite o ID da pizza a ser excluida: "); //Pergunta o ID da pizza a ser excluido 
     scanf("%d", &idPizza);
 
     while (fread(&piz, sizeof(pizza), 1, arquivoPizza) == 1) {
@@ -221,12 +226,12 @@ void removerPizza(){
         rename("pizzas_temp.txt", "pizzas.txt");
         printf("\nPizza com nome '%d' deletada com sucesso!\n", idPizza);
     } else {
-        printf("Pizza com ID '%d' não encontrada.\n", idPizza);
+        printf("Pizza com ID '%d' nao encontrada.\n", idPizza);
     }
 
     printf("Pressione Enter para continuar...\n");
-    getchar(); // Aguarda o Enter
-    getchar(); // Evita que o Enter residual da entrada anterior passe direto
+    getchar(); 
+    getchar();  
 }
 
 void venderPizza() {
@@ -237,6 +242,7 @@ void venderPizza() {
     int qtdIngredientesExtras;
     char nomeIngrediente[255];
 
+    //Abre os arquivos
     FILE *arquivoPizza = fopen("pizzas.txt", "rb");
     FILE *arquivoIngredientes = fopen("ingredientes.txt", "rb");
 
@@ -257,12 +263,11 @@ void venderPizza() {
             printf("Pizza com ID %d encontrada!\n", idPizza);
             printf("Nome: %s\n", piz.nome);
             printf("Tamanho: %c\n", piz.tamanho);
-            printf("Preço base: R$ %.2f\n", piz.preco);
 
-            printf("Ingredientes padrão:\n");
+            printf("Ingredientes padrao:\n");
             for (int i = 0; i < 10; i++) {
                 if (strlen(piz.ingredientes[i].nome) > 0) {
-                    printf(" - %s (R$ %.2f)\n", piz.ingredientes[i].nome, piz.ingredientes[i].preco);
+                    printf(" - %s\n", piz.ingredientes[i].nome);
                 }
             }
 
@@ -272,7 +277,7 @@ void venderPizza() {
     }
 
     if (!found) {
-        printf("Pizza com ID %d não encontrada.\n", idPizza);
+        printf("Pizza com ID %d nao encontrada.\n", idPizza);
         fclose(arquivoPizza);
         fclose(arquivoIngredientes);
         getchar();
@@ -286,17 +291,17 @@ void venderPizza() {
     scanf("%d", &qtdIngredientesExtras);
 
     if (qtdIngredientesExtras > 10) {
-        printf("Erro: Número máximo de ingredientes extras e 10.\n");
+        printf("Erro: Numero maximo de ingredientes extras e 10.\n");
         fclose(arquivoPizza);
         fclose(arquivoIngredientes);
         return;
     }
 
-    getchar(); // Limpa o buffer
+    getchar(); 
     for (int i = 0; i < qtdIngredientesExtras; i++) {
         printf("Digite o nome do ingrediente extra %d: ", i + 1);
         fgets(nomeIngrediente, sizeof(nomeIngrediente), stdin);
-        nomeIngrediente[strcspn(nomeIngrediente, "\n")] = '\0'; // Remove o '\n'
+        nomeIngrediente[strcspn(nomeIngrediente, "\n")] = '\0'; 
 
         rewind(arquivoIngredientes); // Reinicia o cursor no arquivo de ingredientes
         int ingredienteEncontrado = 0;
@@ -304,7 +309,7 @@ void venderPizza() {
         // Busca o ingrediente extra no arquivo ingredientes.txt
         while (fread(&ing, sizeof(ingrediente), 1, arquivoIngredientes) == 1) {
             if (strcmp(ing.nome, nomeIngrediente) == 0) {
-                printf("Ingrediente '%s' adicionado. Preço: R$ %.2f\n", ing.nome, ing.preco);
+                printf("Ingrediente '%s' adicionado. Preco: R$ %.2f\n", ing.nome, ing.preco);
                 precoFinal += ing.preco; // Adiciona o preço do ingrediente extra ao preço final
                 ingredienteEncontrado = 1;
                 break;
@@ -317,10 +322,8 @@ void venderPizza() {
         }
     }
 
-    // Exibe o preço final da pizza
-    printf("\nPreço final da pizza (incluindo extras): R$ %.2f\n", precoFinal);
+    printf("\nPreco final da pizza (incluindo extras): R$ %.2f\n", precoFinal);
 
-    // Registra a venda (pode ser estendido para salvar vendas em arquivo)
     printf("\nVenda registrada com sucesso!\n");
 
     fclose(arquivoPizza);
