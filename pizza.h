@@ -8,7 +8,6 @@ typedef struct pizzas {
     char tamanho;
     float preco;
     ingrediente ingredientes[10];
-    int qtdIngredientes;
 } pizza;
 
 void adicionarPizza();
@@ -18,5 +17,7 @@ void visualizarPizza();
 void editarPizza();
 
 void removerPizza();
+
+void venderPizza();
 
 #endif

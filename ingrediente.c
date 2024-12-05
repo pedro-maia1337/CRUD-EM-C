@@ -89,11 +89,11 @@ void editarIngrediente(){
     char nomeBusca[50];
     ingrediente ing;
     int encontrado = 0;
+    int idPizza;
 
-    printf("Digite o nome do ingrediente que deseja editar: ");
-    getchar(); // Limpa o buffer
-    fgets(nomeBusca, sizeof(nomeBusca), stdin);
-    nomeBusca[strcspn(nomeBusca, "\n")] = '\0'; // Remove o '\n' do final da string
+    getchar(); // Aguarda o Enter
+    printf("Digite o ID do ingrediente que deseja alterar: ");
+    scanf("%d", &idPizza);
 
     FILE *arquivo = fopen("ingredientes.txt", "rb");
     FILE *temp = fopen("temp.txt", "wb");
@@ -106,11 +106,13 @@ void editarIngrediente(){
     }
 
     while (fread(&ing, sizeof(ingrediente), 1, arquivo) == 1) {
-        if (strcmp(ing.nome, nomeBusca) == 0) {
+        if (ing.id == idPizza) {
             encontrado = 1;
+             
             printf("Ingrediente encontrado:\n");
             printf("ID: %d, Nome: %s, Preco: %.2f\n", ing.id, ing.nome, ing.preco);
 
+            getchar();
             printf("Digite o novo nome: ");
             fgets(ing.nome, sizeof(ing.nome), stdin);
             ing.nome[strcspn(ing.nome, "\n")] = '\0';
@@ -143,11 +145,10 @@ void removerIngrediente(){
     char nomeBusca[50];
     ingrediente ing;
     int encontrado = 0;
+    int idPizza;
 
-    printf("Digite o nome do ingrediente que deseja deletar: ");
-    getchar(); // Limpa o buffer
-    fgets(nomeBusca, sizeof(nomeBusca), stdin);
-    nomeBusca[strcspn(nomeBusca, "\n")] = '\0'; // Remove o '\n' do final da string
+    printf("Digite o ID do ingrediente que deseja deletar: ");
+    scanf("%d", &idPizza);
 
     FILE *arquivo = fopen("ingredientes.txt", "rb");
     FILE *temp = fopen("temp.txt", "wb");
@@ -160,7 +161,7 @@ void removerIngrediente(){
     }
 
     while (fread(&ing, sizeof(ingrediente), 1, arquivo) == 1) {
-        if (strcmp(ing.nome, nomeBusca) == 0) {
+        if (ing.id == idPizza) {
             encontrado = 1;
             printf("Ingrediente '%s' deletado.\n", ing.nome);
             continue; // Ignora o ingrediente para não copiá-lo para o arquivo temporário
