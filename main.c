@@ -67,7 +67,7 @@ int main(void){
                 break;
 
             case 9:
-                //vender
+                venderPizza();
                 break;
 
             case 0:
@@ -92,6 +92,3 @@ void cabecalho() {
     printf("-----------------------------------\n");
     printf("\n");
 }
-
-
-
